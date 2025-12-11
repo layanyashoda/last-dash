@@ -1,3 +1,4 @@
+// src/app/(main)/dashboard/layout.tsx
 import { ReactNode } from "react";
 
 import { cookies } from "next/headers";
@@ -18,10 +19,19 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
   const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
 
   return (
+    // Assuming the element wrapping <AppSidebar /> and <SidebarInset /> (likely applied by SidebarProvider)
+    // is set to 'flex' or 'grid' to enable flex-1/min-w-0 to work correctly.
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
       <SidebarInset
         className={cn(
+          // Margin classes from previous fix to offset the content from the fixed sidebar
+          "peer-data-[state=open]:ml-64 peer-data-[state=collapsed]:ml-20",
+          
+          // FIX: Add flex-1 and min-w-0 to ensure the content area shrinks to fit the remaining space 
+          // and prevents horizontal overflow caused by margin + 100% width calculation.
+          "flex-1 min-w-0",
+
           "[html[data-content-layout=centered]_&]:mx-auto! [html[data-content-layout=centered]_&]:max-w-screen-2xl!",
           // Adds right margin for inset sidebar in centered layout up to 113rem.
           // On wider screens with collapsed sidebar, removes margin and sets margin auto for alignment.

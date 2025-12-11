@@ -61,7 +61,7 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         title: "Refined Products Imports",
-        url: "/dashboard/crm",
+        url: "/dashboard/refined-products",
         icon: ChartSpline,
       },
       {
