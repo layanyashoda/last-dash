@@ -66,22 +66,22 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         title: "Landed Cost",
-        url: "/dashboard/finance",
+        url: "/dashboard/landed-cost",
         icon: Proportions,
       },
       {
         title: "Platts",
-        url: "/dashboard/coming-soon",
+        url: "/dashboard/platts",
         icon: ChartPie,
       },
       {
         title: "Jet A-1 Sales",
-        url: "/dashboard/coming-soon",
+        url: "/dashboard/jet-a1-sales",
         icon: Plane,
       },
       {
         title: "Oil Balance Summary",
-        url: "/dashboard/coming-soon",
+        url: "/dashboard/oil-balance",
         icon: Droplets,
       },
     ],
