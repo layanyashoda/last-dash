@@ -17,10 +17,10 @@ import {
 
 const searchItems = [
   { group: "Dashboards", icon: LayoutDashboard, label: "Summary", href: "/dashboard/default" },
-  { group: "Dashboards", icon: ChartSpline, label: "Refined Products Imports", href: "/dashboard/crm"},
-  { group: "Dashboards", icon: Proportions, label: "Landed Cost", href: "/dashboard/finance"},
-  { group: "Dashboards", icon: ChartPie, label: "Platts", href: "/dashboard/coming-soon"},
-  { group: "Dashboards", icon: Plane, label: "Jet A-1 Sales", href: "/dashboard/coming-soon" },
+  { group: "Dashboards", icon: ChartSpline, label: "Refined Products Imports", href: "/dashboard/refined-products" },
+  { group: "Dashboards", icon: Proportions, label: "Landed Cost", href: "/dashboard/landed-cost" },
+  { group: "Dashboards", icon: ChartPie, label: "Platts", href: "/dashboard/platts" },
+  { group: "Dashboards", icon: Plane, label: "Jet A-1 Sales", href: "/dashboard/jet-a1-sales" },
   { group: "Dashboards", icon: Droplets, label: "Oil Balance Summary", href: "/dashboard/coming-soon" },
   { group: "Additional Reports", icon: BadgeDollarSign, label: "SAP Monthly Total Sales", href: "/dashboard/coming-soon" },
   { group: "Additional Reports", icon: BadgeDollarSign, label: "SAP Power Plant Sales", href: "/dashboard/coming-soon" },

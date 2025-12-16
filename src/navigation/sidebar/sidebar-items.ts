@@ -92,12 +92,12 @@ export const sidebarItems: NavGroup[] = [
     items: [
       {
         title: "SAP Monthly Total Sales",
-        url: "/dashboard/coming-soon",
+        url: "/dashboard/sap-sales",
         icon: BadgeDollarSign,
       },
       {
-        title: "SAP Power Plant Sales",
-        url: "/dashboard/coming-soon",
+        title: "Power Plant Sales",
+        url: "/dashboard/power-plant-sales",
         icon: BadgeDollarSign,
       },
     ],
