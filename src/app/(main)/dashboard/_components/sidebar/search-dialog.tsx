@@ -21,9 +21,9 @@ const searchItems = [
   { group: "Dashboards", icon: Proportions, label: "Landed Cost", href: "/dashboard/landed-cost" },
   { group: "Dashboards", icon: ChartPie, label: "Platts", href: "/dashboard/platts" },
   { group: "Dashboards", icon: Plane, label: "Jet A-1 Sales", href: "/dashboard/jet-a1-sales" },
-  { group: "Dashboards", icon: Droplets, label: "Oil Balance Summary", href: "/dashboard/coming-soon" },
-  { group: "Additional Reports", icon: BadgeDollarSign, label: "SAP Monthly Total Sales", href: "/dashboard/coming-soon" },
-  { group: "Additional Reports", icon: BadgeDollarSign, label: "SAP Power Plant Sales", href: "/dashboard/coming-soon" },
+  { group: "Dashboards", icon: Droplets, label: "Oil Balance Summary", href: "/dashboard/oil-balance" },
+  { group: "Additional Reports", icon: BadgeDollarSign, label: "SAP Monthly Total Sales", href: "/dashboard/sap-sales" },
+  { group: "Additional Reports", icon: BadgeDollarSign, label: "Power Plant Sales", href: "/dashboard/power-plant-sales" },
 ];
 
 export function SearchDialog() {

@@ -60,7 +60,9 @@ export function OverviewCards({
   const changeColor = YoYChange !== 0 ? (YoYChange >= 0 ? 'text-green-500' : 'text-red-500') : 'text-muted-foreground';
   
   const displayedValue = comparisonYear ? formatPercent(Math.abs(YoYChange)) : formatPercent(dieselShare);
-  const displayedIcon = comparisonYear ? ChangeIcon : Truck;
+  
+  // FIX: Rename to PascalCase
+  const DisplayedIcon = comparisonYear ? ChangeIcon : Truck;
   const displayedColor = comparisonYear ? changeColor : 'text-primary';
   
 
@@ -86,7 +88,8 @@ export function OverviewCards({
           <CardTitle className="text-sm font-medium">
             {comparisonYear ? 'YoY Sales Volume Change' : 'Auto Diesel Share'}
           </CardTitle>
-          <displayedIcon className={`h-4 w-4 ${displayedColor}`} />
+          {/* FIX: Use the PascalCase variable name */}
+          <DisplayedIcon className={`h-4 w-4 ${displayedColor}`} />
         </CardHeader>
         <CardContent>
           <div className={`text-2xl font-bold ${displayedColor}`}>
