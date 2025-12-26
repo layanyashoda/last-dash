@@ -1,114 +1,69 @@
-// src/app/(main)/dashboard/landed-cost/_components/cost-chart.tsx
 "use client";
 
-import { useMemo, useState } from 'react';
-import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend } from 'recharts';
+import { useMemo } from 'react';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Legend, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { LandedCost, productNames } from './data';
-import { Separator } from '@/components/ui/separator';
-
-const formatRs = (value: number) => {
-    const num = value / 1000;
-    return `${num.toFixed(0)}k Rs/MT`;
-};
-
-const chartConfig = productNames.reduce((acc, name, index) => {
-    // Assign colors cyclically for the products
-    acc[name] = { label: name, color: `hsl(var(--chart-${(index % 6) + 1}))` };
-    return acc;
-}, {} as Record<string, { label: string, color: string }>);
-
+import { LandedCost } from './data';
 
 interface CostChartProps {
-    data: LandedCost[];
-    selectedYear: string;
+  data: LandedCost[];
+  comparisonData?: LandedCost[];
+  selectedYear: string;
+  comparisonYear?: string;
 }
 
-export function CostChart({ data, selectedYear }: CostChartProps) {
-  const [selectedProduct, setSelectedProduct] = useState<'All' | string>('All');
+export function CostChart({ data, comparisonData, selectedYear, comparisonYear }: CostChartProps) {
   
   const chartData = useMemo(() => {
-    const monthlyData = data
-        .reduce((acc, row) => {
-            if (!acc[row.month]) {
-                acc[row.month] = { month: row.month };
-            }
-            acc[row.month][row.product] = row['Landing Cost (Rs/MT)'];
-            return acc;
-        }, {} as Record<string, any>);
+    // We aggregate by month for the chart. 
+    // Usually showing the average landed cost across all products per month.
+    const months = [...new Set(data.map(d => d.month))];
+    
+    return months.map(month => {
+      const monthItems = data.filter(d => d.month === month);
+      const avgCurrent = monthItems.reduce((acc, curr) => acc + curr['Landing Cost (Rs/MT)'], 0) / (monthItems.length || 1);
+      
+      let avgCompare = 0;
+      if (comparisonData) {
+        const compareItems = comparisonData.filter(d => d.month === month);
+        avgCompare = compareItems.reduce((acc, curr) => acc + curr['Landing Cost (Rs/MT)'], 0) / (compareItems.length || 1);
+      }
 
-    return Object.values(monthlyData);
-  }, [data]);
+      return {
+        month,
+        [selectedYear]: avgCurrent,
+        ...(comparisonYear ? { [comparisonYear]: avgCompare } : {}),
+      };
+    });
+  }, [data, comparisonData, selectedYear, comparisonYear]);
 
-  const valueFormatter = (value: number) => {
-    return `Rs ${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  const chartConfig = {
+    [selectedYear]: { label: `${selectedYear} Cost`, color: "hsl(var(--chart-1))" },
+    ...(comparisonYear ? { [comparisonYear]: { label: `${comparisonYear} Cost`, color: "hsl(var(--chart-2))" } } : {}),
   };
-  
-  const chartKeys = selectedProduct === 'All' 
-    ? productNames
-    : [selectedProduct];
 
   return (
-    <Card className="col-span-12 lg:col-span-8">
-      <CardHeader className="flex-row justify-between items-center">
-        <div>
-          <CardTitle>Monthly Landed Cost Trend - {selectedYear}</CardTitle>
-          <CardDescription>Final Landed Cost (Rs/MT) including all Duties and Taxes.</CardDescription>
-        </div>
-        <div className="flex space-x-2">
-          <Select 
-            onValueChange={(value) => setSelectedProduct(value)} 
-            defaultValue="All"
-          >
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Select Product" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">All Products</SelectItem>
-              <Separator />
-              {productNames.map(product => (
-                <SelectItem key={product} value={product}>
-                  {product}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <Card className="col-span-12">
+      <CardHeader>
+        <CardTitle>Landed Cost Trend {comparisonYear && 'Comparison'}</CardTitle>
+        <CardDescription>
+          Average Landed Cost (Rs/MT) across all products.
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
-          <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+        <ChartContainer config={chartConfig} className="min-h-[350px] w-full">
+          <BarChart data={chartData}>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
-            <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
-            <YAxis 
-              tickFormatter={(value) => formatRs(value)} 
-              axisLine={false} 
-              tickLine={false} 
-              tickMargin={10} 
-            />
-            <ChartTooltip 
-              cursor={false} 
-              content={<ChartTooltipContent valueFormatter={valueFormatter} />} 
-            />
-            <Legend layout="horizontal" verticalAlign="bottom" align="center" />
-            
-            {chartKeys.map((key) => {
-                const config = chartConfig[key as keyof typeof chartConfig];
-                return (
-                    <Line
-                        key={key}
-                        type="monotone"
-                        dataKey={key as keyof LandedCost}
-                        stroke={config.color.replace('hsl(var(', 'var(').replace('))', '')}
-                        strokeWidth={2}
-                        dot={{ r: 4 }}
-                        activeDot={{ r: 6 }}
-                    />
-                );
-            })}
-          </LineChart>
+            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+            <YAxis tickFormatter={(val) => `${(val/1000).toFixed(0)}k`} axisLine={false} tickLine={false} />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <Legend />
+            <Bar dataKey={selectedYear} fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
+            {comparisonYear && (
+              <Bar dataKey={comparisonYear} fill="hsl(var(--muted-foreground))" fillOpacity={0.5} radius={[4, 4, 0, 0]} />
+            )}
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
